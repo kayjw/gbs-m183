@@ -1,5 +1,81 @@
 # gbs-m183 - Implement application security
 
+## file structure
+
+```php
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Name</title>
+</head>
+<body>
+    <?php
+        // get data from fields
+        $dataName = (isset($_POST["dataName"])
+                    && !empty($_POST["dataName"])
+                    && filter_var($_POST['dataName'], 513)) ? $_POST["dataName"] : "";
+
+        $gotCorrectData = false;
+        $errorFields = array();
+
+        if (isset($_POST["Submit"]) && !empty($_POST["Submit"])) {
+            // handle post request
+            $gotCorrectData = true;
+
+            // validate fields
+            if (!isset($_POST["dataName"])
+                || empty($_POST["dataName"])
+                || !filter_var($_POST['dataName'], 513)
+                || trim($_POST["dataName"]) == "") {
+
+                $gotCorrectData = false;
+                $errorFields[] = "dataName";
+            }
+
+            if ($gotCorrectData) {
+                // show that everything is correct
+    ?>
+    <h1>Success</h1>
+    <p>Data:</p>
+
+    <?php
+                $dataName = htmlspecialchars($dataName);
+                echo "<b>dataName:</b> $dataName<br />";
+            } else {
+                // echo errors if they exist
+                echo "<p><b>Errors</b></p>";
+                echo "<ul><li>";
+                echo implode("</li><li>", $errorFields);
+                echo "</li></ul>";
+            }
+        }
+        if (!$gotCorrectData) {
+            // form not submitted (gets shown on first load)
+    ?>
+
+        <h1>Title of application</h1>
+
+        <form method="post">
+            dataName
+            <input type="text" name="dataName" value="<?php echo htmlspecialchars($dataName); ?>" /><br />
+            <input type="submit" name="Submit" value="Send button text" />
+        </form>
+
+    <?php
+        }
+    ?>
+
+</body>
+```
+
+TODO: SELECT (MULTIPLE CHECK)
+RADIO
+-> VALIDATION UND DARSTELLUNG
+
 ## validation example
 
 ```php
@@ -88,6 +164,11 @@ End: $
 <input type="text" id="lname" name="lname" />
 ```
 
+```php
+Vorname
+<input type="text" name="Vorname" value="<?php echo htmlspecialchars($Vorname);?>" />
+```
+
 ### radio
 
 ```html
@@ -99,7 +180,23 @@ End: $
 <label for="javascript">JavaScript</label>
 ```
 
-### checkboxe
+```php
+<input type="radio" name="Anrede" value="Hr."
+    <?php if ($Anrede == "Hr.") {
+        echo "checked=\"checked\" ";
+    } ?>
+/>Herr
+
+<input type="radio" name="Anrede" value="Fr."
+    <?php
+        if ($Anrede == "Fr.") {
+            echo "checked=\"checked\" ";
+        }
+    ?>
+/>Frau <br />
+```
+
+### checkboxes
 
 ```html
 <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" />
@@ -108,6 +205,51 @@ End: $
 <label for="vehicle2"> I have a car</label><br />
 <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat" />
 <label for="vehicle3"> I have a boat</label>
+```
+
+```php
+<input type="checkbox" name="AGB" value="ok"
+    <?php
+        if ($AGB != "") {
+            echo "checked=\"checked\" ";
+        }
+    ?>
+/> Ich akzeptiere die AGB.<br />
+```
+
+### multiple select
+
+```php
+<select name="section[]" size="4" multiple="multiple">
+    <option value="first"
+        <?php
+            if (in_array("first", $Sektion)) {
+                echo " selected=\"selected\"";
+            }
+        ?>
+    >First</option>
+
+    <option value="second"
+        <?php
+            if (in_array("second", $Sektion)) {
+                echo " selected=\"selected\"";
+            }
+        ?>
+    >Second</option>
+
+    <option value="third"
+        <?php
+            if (in_array("third", $Sektion)) {
+                echo " selected=\"selected\"";
+        } ?>
+    >Third</option>
+</select>
+```
+
+### textarea
+
+```php
+<textarea cols="70" rows="10" name="Kommentare"><?php echo htmlspecialchars($Kommentare);?></textarea>
 ```
 
 ### submit
