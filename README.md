@@ -1,6 +1,7 @@
 # gbs-m183 - Implement application security
 
 ## validation example
+
 ```php
 !isset($_POST["Email"])
 ```
@@ -52,23 +53,28 @@ End: $
 | ab I cd                   | match ab or cd            |
 | a{5}a{2,}                 | exactly five, two or more |
 
-
 ### mail
+
 ```
 '/([^@ \t\r\n]+)@([^@ \t\r\n]+)\.([^@ \t\r\n]+)/'
 ```
 
 ### mail with one dot
-comming soon
 
-### swiss phone 
+```
+'/[a-zA-Z0-9_\-.]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}/'
+```
+
+### swiss phone
+
 ```
 '/(\+41)\s?(\d{2})\s?(\d{3})\s?(\d{2})\s?(\d{2})/'
 ```
 
 ### swiss phone 2
+
 ```
-/(\b(0041 | 0) | \B\+41)(\s?\(0\))?(\s)?[1-9]{2}(\s)?[0-9]{3}(\s)?[0-9]{2}(\s)?[0-9]{2}\b/
+'/(\b(0041 | 0) | \B\+41)(\s?\(0\))?(\s)?[1-9]{2}(\s)?[0-9]{3}(\s)?[0-9]{2}(\s)?[0-9]{2}\b/'
 ```
 
 ## form fields
