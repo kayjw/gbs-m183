@@ -551,8 +551,7 @@ makecert.bat
 2. Check if certificate got created
 
 ```
-überprüfen: C:\xampp\apache\conf
-\ssl.crt\server.crt
+C:\xampp\apache\conf\ssl.crt\server.crt
 ```
 
 3. Add certificate
@@ -590,3 +589,31 @@ both keys are calculated together. The public key is published in many places, t
 | 56 Bit  | 2^56 = 7.2 x 10^16  | 2.3 a (Jahre) | 20 h          |
 | 128 Bit | 2^128 = 3.4 x 10^38 | 11 x 10^21 a  | 11 x 10^18 a  | 40 x 109 a   |
 | 256 Bit | 2^256 = 1.2 x 10^77 | 3.7 x 10^60 a | 3.7 x 10^57 a | 3.7 x 1048 a |
+
+Duration = Possibilities / (1 G)
+
+-> Brute force with 1-GHz-processor: 1 G = 1 000 000 000
+
+Note: 7.205759404E16 = 7.2 x 10^16
+
+
+### Example 56 Bit 1 CPU
+2^56 = 7.2 x 10^16 combinations
+
+1-GHz-processor -> 109 tries per second
+
+Duration:
+
+7.2 x 10^16 possibilites / 109 tries per second = 7.2 x 10^7 seconds 
+
+In hours:
+
+7.2 x 10^7 seconds / 3‘600 seconds per hour = 20‘000 hours 
+
+In days:
+
+20‘000 hourds / 24 hourds per day = 833.3 days 
+
+In years:
+
+833.3 days / 365.25 days per year = 2.3 Jahre
