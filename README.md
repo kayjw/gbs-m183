@@ -92,7 +92,7 @@ trim($_POST["Email"]) == ""
 
 ```php
 $AnredeArr = array('Hr.', 'Fr.');
-        $tmpIo = false;
+        $anredeOk = false;
         if (!isset($_POST["Anrede"]) || empty($_POST["Anrede"]) || !filter_var($_POST['Anrede'], 513)) {
             $ok = false;
             $fehlerfelder[] = "Anrede";
@@ -100,10 +100,10 @@ $AnredeArr = array('Hr.', 'Fr.');
             // Anrede ist gesetzt und ist ein String
             foreach ($AnredeArr as $anr) {
                 if (strcmp($anr, $_POST["Anrede"])) {
-                    $tmpIo = true;
+                    $anredeOk = true;
                 }
             }
-            if (!$tmpIo) {
+            if (!$anredeOk) {
                 // Anrede enthält weder Hr. noch Fr.
                 $ok = false;
                 $fehlerfelder[] = "Anrede";
@@ -308,94 +308,124 @@ Send to own file
 
 <body>
     <?php
-    //
-    // Die Daten werden in Variable gefüllt:
-    //
-    $Anrede = (isset($_POST["Anrede"]) && !empty($_POST["Anrede"]) && filter_var($_POST['Anrede'], 513)) ? $_POST["Anrede"] : "";
-    $Vorname = (isset($_POST["Vorname"]) && !empty($_POST["Vorname"]) && filter_var($_POST['Vorname'], 513)) ? $_POST["Vorname"] : "";
-    $Nachname = (isset($_POST["Nachname"]) && !empty($_POST["Nachname"]) && filter_var($_POST['Nachname'], 513)) ? $_POST["Nachname"] : "";
-    $Email = (isset($_POST["Email"]) && !empty($_POST["Email"]) && filter_var($_POST['Email'], 513)) ? $_POST["Email"] : "";
-    $Anzahl = (isset($_POST["Anzahl"]) && !empty($_POST["Anzahl"])) ? $_POST["Anzahl"] : "";
-    $Promo = (isset($_POST["Promo"]) && !empty($_POST["Promo"]) && filter_var($_POST['Promo'], 513)) ? $_POST["Promo"] : "";
-    $Sektion = (isset($_POST["Sektion"]) && !empty($_POST["Sektion"]) && is_array($_POST["Sektion"])) ? $_POST["Sektion"] : array();
-    $Kommentare = (isset($_POST["Kommentare"]) && !empty($_POST["Kommentare"]) && filter_var($_POST['Kommentare'], 513)) ? $_POST["Kommentare"] : "";
-    $AGB = (isset($_POST["AGB"]) && !empty($_POST["AGB"]) && filter_var($_POST['AGB'], 513)) ? $_POST["AGB"] : "";
+    $Anrede = (isset($_POST["Anrede"])
+                && !empty($_POST["Anrede"])
+                && filter_var($_POST['Anrede'], 513)) ? $_POST["Anrede"] : "";
+
+    $Vorname = (isset($_POST["Vorname"])
+                && !empty($_POST["Vorname"])
+                && filter_var($_POST['Vorname'], 513)) ? $_POST["Vorname"] : "";
+
+
+    $Email = (isset($_POST["Email"])
+                && !empty($_POST["Email"])
+                && filter_var($_POST['Email'], 513)) ? $_POST["Email"] : "";
+
+    $Anzahl = (isset($_POST["Anzahl"])
+                && !empty($_POST["Anzahl"])) ? $_POST["Anzahl"] : "";
+
+    $Promo = (isset($_POST["Promo"])
+                && !empty($_POST["Promo"])
+                && filter_var($_POST['Promo'], 513)) ? $_POST["Promo"] : "";
+
+    $Sektion = (isset($_POST["Sektion"])
+                && !empty($_POST["Sektion"])
+                && is_array($_POST["Sektion"])) ? $_POST["Sektion"] : array();
+
+    $Kommentare = (isset($_POST["Kommentare"])
+                    && !empty($_POST["Kommentare"])
+                    && filter_var($_POST['Kommentare'], 513)) ? $_POST["Kommentare"] : "";
+
+    $AGB = (isset($_POST["AGB"])
+                && !empty($_POST["AGB"])
+                && filter_var($_POST['AGB'], 513)) ? $_POST["AGB"] : "";
+
     $ok = false;
     $fehlerfelder = array();
     if (isset($_POST["Submit"]) && !empty($_POST["Submit"])) {
-        //
-        // Das Formular wurde ausgefüllt zum Server geschickt.
-        //
+        // Form submitted
         $ok = true;
-        //
-        // Die Eingabewerte werden überprüft:
-        //
+        // Validate values
         $AnredeArr = array('Hr.', 'Fr.');
-        $tmpIo = false;
+        $anredeOk = false;
         if (!isset($_POST["Anrede"]) || empty($_POST["Anrede"]) || !filter_var($_POST['Anrede'], 513)) {
             $ok = false;
             $fehlerfelder[] = "Anrede";
         } else {
-            // Anrede ist gesetzt und ist ein String
             foreach ($AnredeArr as $anr) {
                 if (strcmp($anr, $_POST["Anrede"])) {
-                    $tmpIo = true;
+                    // set variable to true if any "anrede" matches
+                    $anredeOk = true;
                 }
             }
-            if (!$tmpIo) {
-                // Anrede enthält weder Hr. noch Fr.
+            if (!$anredeOk) {
+                // no "anrede" set
                 $ok = false;
                 $fehlerfelder[] = "Anrede";
             }
         }
 
-        if (!isset($_POST["Vorname"]) || empty($_POST["Vorname"]) || !filter_var($_POST['Vorname'], 513) || trim($_POST["Vorname"]) == "") {
+        if (!isset($_POST["Vorname"])
+            || empty($_POST["Vorname"])
+            || !filter_var($_POST['Vorname'], 513)
+            || trim($_POST["Vorname"]) == "") {
             $ok = false;
             $fehlerfelder[] = "Vorname";
         }
-        if (!isset($_POST["Nachname"]) || empty($_POST["Nachname"]) || !filter_var($_POST['Nachname'], 513) || trim($_POST["Nachname"]) == "") {
-            $ok = false;
-            $fehlerfelder[] = "Nachname";
-        }
-        if (
-            !isset($_POST["Email"]) || empty($_POST["Email"]) || trim($_POST["Email"]) == "" ||
-            !preg_match('/^[a-zA-Z0-9_\-.]+@[a-zA-Z0-9\-.]+\.[a-zA-Z]{2,6}$/', $_POST["Email"])
-        ) {
+
+        if (!isset($_POST["Email"])
+            || empty($_POST["Email"])
+            || trim($_POST["Email"]) == ""
+            || !preg_match('/^[a-zA-Z0-9_\-.]+@[a-zA-Z0-9\-.]+\.[a-zA-Z]{2,6}$/', $_POST["Email"])) {
             $ok = false;
             $fehlerfelder[] = "E-Mail";
         }
-        if (!isset($_POST["Promo"]) || empty($_POST["Promo"]) || !filter_var($_POST['Promo'], 513) || trim($_POST["Promo"]) == "") {
+
+        if (!isset($_POST["Promo"])
+            || empty($_POST["Promo"])
+            || !filter_var($_POST['Promo'], 513)
+            || trim($_POST["Promo"]) == "") {
             $ok = false;
             $fehlerfelder[] = "Promo";
         }
-        if (!isset($_POST["Anzahl"]) || empty($_POST["Anzahl"]) || !filter_var($_POST['Anzahl'], 513) || $_POST["Anzahl"] == "0") {
+
+        if (!isset($_POST["Anzahl"])
+            || empty($_POST["Anzahl"])
+            || !filter_var($_POST['Anzahl'], 513)
+            || $_POST["Anzahl"] == "0") {
             $ok = false;
             $fehlerfelder[] = "Anzahl Karten";
         }
-        if (!isset($_POST["Sektion"]) || empty($_POST["Sektion"]) || !is_array($_POST["Sektion"])) {
+
+        if (!isset($_POST["Sektion"])
+            || empty($_POST["Sektion"])
+            || !is_array($_POST["Sektion"])) {
             $ok = false;
             $fehlerfelder[] = "Sektion";
         }
-        if (!isset($_POST["Kommentare"]) || empty($_POST["Kommentare"]) || !filter_var($_POST['Kommentare'], 513) || trim($_POST["Kommentare"]) == "") {
+
+        if (!isset($_POST["Kommentare"])
+            || empty($_POST["Kommentare"])
+            || !filter_var($_POST['Kommentare'], 513)
+            || trim($_POST["Kommentare"]) == "" /*only whitespaces*/) {
             $ok = false;
             $fehlerfelder[] = "Kommentare";
         }
+
         if (!isset($_POST["AGB"]) || empty($_POST["AGB"]) || !filter_var($_POST['AGB'], 513)) {
             $ok = false;
             $fehlerfelder[] = "AGB";
         }
 
         if ($ok) {
-            //
-            // Alle Werte aus dem Formular sind i.O. Sie werden anstelle des Formulars ausgegeben:
-            //
+            // everything ok
     ?>
-            <h1>Bestätigung</h1>
-            <p>Ihre Bestellung für WM-Tickets wurde mit den folgenden Daten angenommen:</p>
+        <h1>Everything ok</h1>
+        <p>Heres the sent data:</p>
+
         <?php
             $Anrede = htmlspecialchars($Anrede);
             $Vorname = htmlspecialchars($Vorname);
-            $Nachname = htmlspecialchars($Nachname);
             $Email = htmlspecialchars($Email);
             $Promo = htmlspecialchars($Promo);
             $Anzahl = htmlspecialchars($Anzahl);
@@ -404,7 +434,6 @@ Send to own file
             $AGB = htmlspecialchars($AGB);
             echo "<b>Anrede:</b> $Anrede<br />";
             echo "<b>Vorname:</b> $Vorname<br />";
-            echo "<b>Nachname:</b> $Nachname<br />";
             echo "<b>E-Mail:</b> $Email<br />";
             echo "<b>Promo:</b> $Promo<br />";
             echo "<b>Anzahl Karten:</b> $Anzahl<br />";
@@ -412,102 +441,102 @@ Send to own file
             echo "<b>Kommentare:</b> $Kommentare<br />";
             echo "<b>AGB:</b> $AGB<br />";
         } else {
-            //
-            // Nicht alle Werte aus dem Formular sind i.O. Die Mängel ausgegeben:
-            //
+            // not all values where correct
             echo "<p><b>Formular unvollst&auml;ndig</b></p>";
             echo "<ul><li>";
             echo implode("</li><li>", $fehlerfelder);
             echo "</li></ul>";
         }
-    } // zu if (isset($_POST["Submit"]) && !empty($_POST["Submit"]) ) ...
+    }
 
     if (!$ok) {
-        //
-        // Das Formular wird entweder leer oder mit Vorgabewerten ausgegeben:
-        //
+        // This part gets rendered on the first visit or if the wrong data was sent
         ?>
-        <h1>WM-Ticketservice</h1>
+
+        <h1>Title</h1>
+
         <form method="post">
-            <input type="radio" name="Anrede" value="Hr." <?php
-                                                            if ($Anrede == "Hr.") {
-                                                                echo "checked=\"checked\" ";
-                                                            }
-                                                            ?> />Herr
-            <input type="radio" name="Anrede" value="Fr." <?php
-                                                            if ($Anrede == "Fr.") {
-                                                                echo "checked=\"checked\" ";
-                                                            }
-                                                            ?> />Frau <br />
-            Vorname <input type="text" name="Vorname" value="<?php
-                                                                echo htmlspecialchars($Vorname);
-                                                                ?>" /><br />
-            Nachname <input type="text" name="Nachname" value="<?php
-                                                                echo htmlspecialchars($Nachname);
-                                                                ?>" /><br />
-            E-Mail-Adresse <input type="text" name="Email" value="<?php
-                                                                    echo htmlspecialchars($Email);
-                                                                    ?>" /><br />
-            Promo-Code <input type="password" name="Promo" value="<?php
-                                                                    echo htmlspecialchars($Promo);
-                                                                    ?>" /><br />
+            <input type="radio" name="Anrede" value="Hr."
+            <?php
+                if ($Anrede == "Hr.") { echo "checked=\"checked\" ";}
+            ?>
+            />Herr
+
+            <input type="radio" name="Anrede" value="Fr."
+            <?php
+                if ($Anrede == "Fr.") { echo "checked=\"checked\" ";}
+            ?>
+            />Frau <br />
+
+
+            Vorname <input type="text" name="Vorname" value="
+                <?php echo htmlspecialchars($Vorname);?>"
+            /><br />
+
+            E-Mail-Adresse <input type="text" name="Email" value="
+            <?php echo htmlspecialchars($Email); ?>"
+            /><br />
+
+            Promo-Code <input type="password" name="Promo" value="
+            <?php echo htmlspecialchars($Promo); ?>"
+            /><br />
+
             Anzahl Karten
             <select name="Anzahl">
                 <option value="0">Bitte w&auml;hlen</option>
-                <option value="1" <?php
-                                    if ($Anzahl == "1") {
-                                        echo " selected=\"selected\"";
-                                    }
-                                    ?>>1</option>
-                <option value="2" <?php
-                                    if ($Anzahl == "2") {
-                                        echo " selected=\"selected\"";
-                                    }
-                                    ?>>2</option>
-                <option value="3" <?php
-                                    if ($Anzahl == "3") {
-                                        echo " selected=\"selected\"";
-                                    }
-                                    ?>>3</option>
-                <option value="4" <?php
-                                    if ($Anzahl == "4") {
-                                        echo " selected=\"selected\"";
-                                    }
-                                    ?>>4</option>
-            </select><br />
-            Gew&uuml;nschte Sektion im Stadion
+                <option value="1"
+                    <?php if ($Anzahl == "1") { echo " selected=\"selected\""; } ?>
+                >1</option>
+
+                <option value="2"
+                    <?php if ($Anzahl == "2") { echo " selected=\"selected\""; } ?>
+                >2</option>
+
+                <option value="3"
+                    <?php if ($Anzahl == "3") { echo " selected=\"selected\""; } ?>
+                >3</option>
+
+                <option value="4"
+                    <?php if ($Anzahl == "4") { echo " selected=\"selected\""; } ?>
+                >4</option>
+
+            </select>
+            <br />
+
+            Sektion
             <select name="Sektion[]" size="4" multiple="multiple">
-                <option value="nord" <?php
-                                        if (in_array("nord", $Sektion)) {
-                                            echo " selected=\"selected\"";
-                                        }
-                                        ?>>Nordkurve</option>
-                <option value="sued" <?php
-                                        if (in_array("sued", $Sektion)) {
-                                            echo " selected=\"selected\"";
-                                        }
-                                        ?>>S&uuml;dkurve</option>
-                <option value="haupt" <?php
-                                        if (in_array("haupt", $Sektion)) {
-                                            echo " selected=\"selected\"";
-                                        }
-                                        ?>>Haupttrib&uuml;ne</option>
-                <option value="gegen" <?php
-                                        if (in_array("gegen", $Sektion)) {
-                                            echo " selected=\"selected\"";
-                                        }
-                                        ?>>Gegentrib&uuml;ne</option>
-            </select><br />
+                <option value="nord"
+                    <?php if (in_array("nord", $Sektion)) { echo " selected=\"selected\""; }?>
+                >Nord</option>
+
+                <option value="sued"
+                    <?php if (in_array("sued", $Sektion)) { echo " selected=\"selected\""; }?>
+                >Sued</option>
+
+                <option value="haupt"
+                    <?php if (in_array("haupt", $Sektion)) { echo " selected=\"selected\""; }?>
+                >Haupt</option>
+
+                <option value="gegen"
+                    <?php if (in_array("gegen", $Sektion)) { echo " selected=\"selected\""; }?>
+                >Gegen</option>
+            </select>
+
+            <br />
+
             Kommentare/Anmerkungen
-            <textarea cols="70" rows="10" name="Kommentare"><?php
-                                                            echo htmlspecialchars($Kommentare);
-                                                            ?></textarea><br />
-            <input type="checkbox" name="AGB" value="ok" <?php
-                                                            if ($AGB != "") {
-                                                                echo "checked=\"checked\" ";
-                                                            }
-                                                            ?> />
-            Ich akzeptiere die AGB.<br />
+            <textarea cols="70" rows="10" name="Kommentare">
+                <?php echo htmlspecialchars($Kommentare); ?>
+            </textarea>
+            <br />
+
+            <input type="checkbox" name="AGB" value="ok"
+                <?php if ($AGB != "") { echo "checked=\"checked\" "; } ?>
+            />
+            Ich akzeptiere die AGB.
+
+            <br />
+
             <input type="submit" name="Submit" value="Bestellung aufgeben" />
         </form>
     <?php
@@ -596,23 +625,23 @@ Duration = Possibilities / (1 G)
 
 Note: 7.205759404E16 = 7.2 x 10^16
 
-
 ### Example 56 Bit 1 CPU
+
 2^56 = 7.2 x 10^16 combinations
 
 1-GHz-processor -> 109 tries per second
 
 Duration:
 
-7.2 x 10^16 possibilites / 109 tries per second = 7.2 x 10^7 seconds 
+7.2 x 10^16 possibilites / 109 tries per second = 7.2 x 10^7 seconds
 
 In hours:
 
-7.2 x 10^7 seconds / 3‘600 seconds per hour = 20‘000 hours 
+7.2 x 10^7 seconds / 3‘600 seconds per hour = 20‘000 hours
 
 In days:
 
-20‘000 hourds / 24 hourds per day = 833.3 days 
+20‘000 hourds / 24 hourds per day = 833.3 days
 
 In years:
 
