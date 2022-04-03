@@ -520,7 +520,7 @@ Send to own file
 
 ## Certificate
 
-### Resolve ip
+### Resolve ip
 
 1. Move to: C:\Windows\System32\drivers\etc
 2. Get ip address (ipconfig)
@@ -539,7 +539,7 @@ ping 192.168.210.122
 ping www.name.m183
 ```
 
-### Create certificate
+### Create certificate
 
 1. Add bat file
 
