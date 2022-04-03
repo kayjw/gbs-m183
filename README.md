@@ -91,26 +91,8 @@ trim($_POST["Email"]) == ""
 ```
 
 ```php
-$AnredeArr = array('Hr.', 'Fr.');
-        $anredeOk = false;
-        if (!isset($_POST["Anrede"]) || empty($_POST["Anrede"]) || !filter_var($_POST['Anrede'], 513)) {
-            $ok = false;
-            $fehlerfelder[] = "Anrede";
-        } else {
-            // Anrede ist gesetzt und ist ein String
-            foreach ($AnredeArr as $anr) {
-                if (strcmp($anr, $_POST["Anrede"])) {
-                    $anredeOk = true;
-                }
-            }
-            if (!$anredeOk) {
-                // Anrede enthält weder Hr. noch Fr.
-                $ok = false;
-                $fehlerfelder[] = "Anrede";
-            }
+filter_var($_POST['Name'], 513)
 ```
-
----
 
 Validate array
 
@@ -119,6 +101,26 @@ $Sektion = (isset($_POST["Sektion"])
             && !empty($_POST["Sektion"])
             && is_array($_POST["Sektion"]))
             ? $_POST["Sektion"] : array();
+```
+
+```php
+$AnredeArr = array('Hr.', 'Fr.');
+        $anredeOk = false;
+        if (!isset($_POST["Anrede"]) || empty($_POST["Anrede"]) || !filter_var($_POST['Anrede'], 513)) {
+            $ok = false;
+            $fehlerfelder[] = "Anrede";
+        } else {
+            // check if "Anrede" matches one of the array values
+            foreach ($AnredeArr as $anr) {
+                if (strcmp($anr, $_POST["Anrede"])) {
+                    $anredeOk = true;
+                }
+            }
+            if (!$anredeOk) {
+                // "Anrede" didn't match
+                $ok = false;
+                $fehlerfelder[] = "Anrede";
+            }
 ```
 
 ## regex
@@ -431,6 +433,7 @@ Send to own file
             $Anzahl = htmlspecialchars($Anzahl);
             $Sektion = htmlspecialchars(implode(" ", $Sektion));
             $Kommentare = nl2br(htmlspecialchars($Kommentare));
+            // nl2br inserts HTML line breaks before all newlines in a string
             $AGB = htmlspecialchars($AGB);
             echo "<b>Anrede:</b> $Anrede<br />";
             echo "<b>Vorname:</b> $Vorname<br />";
